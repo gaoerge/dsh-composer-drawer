@@ -1,0 +1,3 @@
+- insert:
+    - id: local-composer-drawer
+      name: '@local/dsh-composer-drawer'

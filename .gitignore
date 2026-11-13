@@ -1,0 +1,8 @@
+node_modules/
+*.tgz
+npm-debug.log*
+.pnpm-store/
+.DS_Store
+Thumbs.db
+release-pack.json
+任务进度.md
