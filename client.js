@@ -11,8 +11,8 @@ window.__ModuleLoader__.load({
 .dsh-composer-drawer button:hover {background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);}
 .dsh-composer-drawer button:focus-visible {outline:2px solid var(--dsw-alias-brand-primary);outline-offset:2px;}
 .dsh-composer-drawer-grip {display:block;width:24px;height:3px;border-radius:3px;background:currentColor;opacity:.65;}
-[data-composer-seat]:has(.dsh-composer-drawer[data-collapsed="true"]) div:has(> [data-composer-card]) {display:none !important;}
-[data-conversation-content][data-content-phase="blank"] [data-composer-seat]:has(.dsh-composer-drawer) div:has(> [data-composer-card]) {display:flex !important;}
+[data-composer-seat]:has(.dsh-composer-drawer[data-collapsed="true"]) [data-composer-card] {display:none !important;}
+[data-conversation-content][data-content-phase="blank"] [data-composer-seat]:has(.dsh-composer-drawer) [data-composer-card] {display:flex !important;}
 `;
     function Drawer(props) {
       const [collapsed, setCollapsed] = React.useState(false);
@@ -44,14 +44,19 @@ window.__ModuleLoader__.load({
           else if (delta < -18) setCollapsed(false);
         }
       }
+      function cancel(e) {
+        if (e.pointerId !== gesture.current?.id) return;
+        gesture.current = null;
+        suppressClick.current = false;
+      }
       const label=props.t(collapsed ? 'expand' : 'collapse');
       return h('div', {className:'dsh-composer-drawer','data-collapsed':String(collapsed)},
         h('style',null,css),
         h('button', {type:'button', 'aria-label':label, 'aria-expanded':!collapsed,
           title:props.t('hint'),
           onPointerDown:down,onPointerMove:move,onPointerUp:up,
-          onPointerCancel:()=>{gesture.current=null;suppressClick.current=true;},
-          onLostPointerCapture:()=>{gesture.current=null;},
+          onPointerCancel:cancel,
+          onLostPointerCapture:cancel,
           onClick:()=>{if(suppressClick.current){suppressClick.current=false;return;}setCollapsed(v=>!v);},
           onKeyDown:(e)=>{if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();setCollapsed(e.key==='ArrowDown');}}
         },h('span',{className:'dsh-composer-drawer-grip','aria-hidden':true}),h('span',null,label))
@@ -60,8 +65,10 @@ window.__ModuleLoader__.load({
     return {
       inject:['slots','locale'],
       apply(ctx) {
-        ctx.locale.register(ns, 'zh', {collapse:'收起输入框',expand:'展开输入框',hint:'向下拖动收起，向上拖动展开；也可点击或使用方向键'});
-        ctx.locale.register(ns, 'en', {collapse:'Hide composer',expand:'Show composer',hint:'Drag down to hide, drag up to show; or click or use arrow keys'});
+        ctx.effect(() => ctx.locale.register(ns, {
+          zh: {collapse:'收起输入框',expand:'展开输入框',hint:'向下拖动收起，向上拖动展开；也可点击或使用方向键'},
+          en: {collapse:'Hide composer',expand:'Show composer',hint:'Drag down to hide, drag up to show; or click or use arrow keys'}
+        }), 'composer-drawer: dictionaries');
         ctx.slots.inject('conversation.input.dock',()=>ctx.slots.register({
           name:'conversation.input.dock', id:'local-composer-drawer', order:1000, locale:ns
         }, Drawer));

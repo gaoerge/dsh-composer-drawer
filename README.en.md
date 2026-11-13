@@ -57,6 +57,15 @@ Follow any restart / refresh instruction. Avoid installing renamed copies alongs
 - Uses the `conversation.input.dock` slot, host React / locale services, and theme tokens.
 - Hiding relies on internal DOM markers `[data-composer-seat]`, `[data-composer-card]`, `[data-conversation-content][data-content-phase="blank"]`, and CSS `:has()`. These are not stable public layout contracts. Host DOM changes or browsers without `:has()` support may break the hiding effect.
 - This is a visibility feature. It does not pause tasks, stop model responses, or change message submission.
+- Starting with `1.0.1`, only the input card is hidden; sibling `conversation.composer.dock` extensions and the context meter remain visible. Controls placed inside the input card are still hidden with it.
+- Dictionaries are disposed with the plugin to avoid duplicate registration on re-enable. This was checked against the rc.5 locale implementation, but browser re-enable testing remains pending.
+- No selector overlap was found with Turn Navigator. Plugins rewriting the same input DOM or overriding its display with higher-priority CSS still need joint browser testing.
+
+## Versions and feedback
+
+A GitHub Release is not required for Git installation. Stable Releases are deferred until real browser validation; `#main` follows new commits. For a fixed revision, replace `#main` in the installation source with the full SHA from the GitHub commit page.
+
+Report issues with the DSH/plugin versions, browser, enabled UI plugins and minimal reproduction steps. Do not include access tokens or private conversations.
 
 ## Privacy
 

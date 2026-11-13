@@ -1,4 +1,4 @@
-# 输入框抽屉 · Composer Drawer
+# DSH 输入框收起插件 · Composer Drawer
 
 <img src="icon.svg" alt="插件图标" width="64" height="64">
 ![许可证 MIT](https://img.shields.io/badge/license-MIT-green)
@@ -57,6 +57,15 @@ dsh plugin --profile web remove @local/dsh-composer-drawer
 - 使用 `conversation.input.dock` slot、宿主 React / locale 服务和主题 token。
 - 收起效果依赖内部 DOM 标记 `[data-composer-seat]`、`[data-composer-card]`、`[data-conversation-content][data-content-phase="blank"]` 以及 CSS `:has()`。这些不是稳定公共布局契约；DSH 页面结构变化或浏览器不支持 `:has()` 时，隐藏效果可能失效。
 - 这只是界面显隐功能，不会暂停运行任务、停止模型回复或改变发送逻辑。
+- 从 `1.0.1` 起，仅隐藏输入卡片；卡片旁的 `conversation.composer.dock` 插件和上下文表保留。若扩展把控件放进输入卡片内部，它仍会随卡片隐藏。
+- 字典随插件生命周期清理，避免停用再启用时重复注册。此修复已对照 rc.5 官方 locale 实现，尚未完成浏览器重启用测试。
+- 未发现与轮次导航的选择器交集；它们可分别影响输入卡片和消息区原生导航。改写相同输入 DOM、使用更高优先级 CSS 的插件仍需联合实测。
+
+## 版本与反馈
+
+GitHub Release 不是 Git 安装的前提。本项目目前保持源码发布，待真实浏览器验证后再创建稳定 Release；`#main` 会随提交变化。需要固定版本时，可把安装源的 `#main` 改为 GitHub 提交页面上的完整 SHA。
+
+反馈问题请使用仓库 Issues，附 DSH 与插件版本、浏览器、启用的界面插件及最短复现步骤；不要附访问令牌或私人对话。
 
 ## 隐私
 

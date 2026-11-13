@@ -1,6 +1,6 @@
 {
   "name": "@local/dsh-composer-drawer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "description": "Collapse the message composer for focused reading and restore it with a drag or click.",
